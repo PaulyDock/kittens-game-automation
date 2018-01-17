@@ -1,4 +1,6 @@
 //requires JQuery on page
 function getBtnWSpan(btnSpan) {
-  $('.btn .nosel')
+  $('.btn .btnContent span')
 }
+
+//trigger doesn't seem to be working
