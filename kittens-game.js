@@ -54,69 +54,71 @@ function autoCraft() {
     return;
   }
 
-  let $resCaps = $('#resContainer .resourceRow'),
-      capped = [];
-      $craftables = $('#craftContainer .resourceRow'),
-      craftClickMap,
-      $singleResParams,
-      allResParams = {};
+  let $observeBtn = $('#observeBtn')[0],
+      $resCaps = $('#resContainer .resourceRow'),
+      capped = [],
+      $craftables = $('#craftContainer .resourceRow');
+
+  if ($observeBtn) { $observeBtn.click(); }
+
+  let craftClickMap = $.map($craftables, craftable => {
+    return $('td', craftable)[0].innerText;
+  });
 
   const resCraftKey = {
-    catnip: 'wood',
-    wood: 'beam',
-    minerals: 'slab',
-    coal: 'steel',
-    iron: 'plate',
-    gold: 'TBD',
-    catpower: 'TBD',
-    science: 'TBD',
-    culture: 'TBD',
-    faith: 'TBD'
+    'catnip:': 'wood:',
+    'wood:': 'beam:',
+    'minerals:': 'slab:',
+    'coal:': 'steel:',
+    'iron:': 'plate:',
+    'gold:': 'TBD',
+    'catpower:': 'TBD',
+    'science:': 'TBD',
+    'culture:': 'TBD',
+    'faith:': 'TBD'
   };
 
-  $resCaps.forEach(row => {
-    let $max = $('.maxRes', row)[0];
-    if ($max) {
-      if ($('.resAmount', row)[0].innerText === $max.innerText) {
-        capped.push($('.resource-name', row)[0].innerText);
+  $.each($resCaps, (idx, elem) => {
+    let max = $('.maxRes', elem)[0].innerText,
+        current = $('.resAmount', elem)[0].innerText,
+        name = $('.resource-name', elem)[0].innerText;
+    if (max && max !== 0 && max !== '') {
+      if (current === max.substring(1)) {
+        if (name === 'catpower:') {
+          $('#fastHuntContainer a')[0].click();
+          let parchmentLoc = craftClickMap.indexOf('parchment:'),
+              $parchmentAll = $('td a', $craftables[parchmentLoc])[3];
+          setTimeout(() => {
+            $parchmentAll.click();
+          }, 1000);
+        } else if (name === 'faith:') {
+          $('#fastPraiseContainer a').click();
+        } else {
+          capped.push(name);
+        }
       }
     }
-    // $('.maxRes', $res[0])[0].innerText
-    // $('.resAmount', $res[0])[0].innerText
   });
-  console.log('capped', capped);
 
   capped = capped
     .map(resource => resCraftKey[resource])
-    .filter(craftable => craftable !== 'TBD');
-  console.log('capped post-filter', capped);
-
-  craftClickMap = $.map($craftables, (craftable, idx) => {
-    return $('.resource-name', craftable)[0].innerText;
-  });
-  console.log('craftClickMap', craftClickMap);
+    .filter(craftable => craftable && craftable !== 'TBD');
 
   capped.forEach(resource => {
     let idx = craftClickMap.indexOf(resource);
+    $('td a', $craftables[idx])[0].click();
     console.log(resource + ' crafted');
-    $craftables[idx].click();
   });
-  // $resCaps.forEach(row => {
-  //   let $singleParams = $('td', row),
-  //       singleParams = {};
 
-  //   $singleParams.forEach(elem => {
-  //     singleParams[elem.className] = elem.innerText;
-  //   });
-
-  //   allResParams[singleParams['resource-name']] = singleParams;
-  // });
-  // console.log('allResParams', allResParams);
-
-  setTimeout(() => { autoCraft(); }, 5000);  
+  setTimeout(() => { autoCraft(); }, 1000);  
 };
+
+function autoObserve() {
+//$('input#observeBtn')  
+}
 
 function autoAll() {
   autoCatnip();
   autoBuild();
+  autoCraft();
 }
