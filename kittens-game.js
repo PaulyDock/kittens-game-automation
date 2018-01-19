@@ -29,7 +29,8 @@ function autoBuild(buildPriorities) {
     'Warehouse',
     'Tradepost',
     'Workshop',
-    'Ziggurat'
+    'Ziggurat',
+    'Smelter'
   ];
 
   let $clickableBtns = $('.bldGroupContainer .btn').not('.disabled');
@@ -113,10 +114,6 @@ function autoCraft() {
 
   setTimeout(() => { autoCraft(); }, 1000);  
 };
-
-function autoObserve() {
-//$('input#observeBtn')  
-}
 
 function autoAll() {
   autoCatnip();
