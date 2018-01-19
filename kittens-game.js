@@ -43,7 +43,7 @@ function autoBuild(buildPriorities) {
   buildPriorities.forEach(building => {
     let idx = clickableBldgNames.indexOf(building);
     if (idx > -1) {
-      console.log(building + ' built');
+      console.log('Built: ' + building);
       $clickableBtns[idx].click();
     }
   });
@@ -88,6 +88,7 @@ function autoCraft() {
       if (current === max.substring(1)) {
         if (name === 'catpower:') {
           $('#fastHuntContainer a')[0].click();
+          console.log('Hunted');
           let parchmentLoc = craftClickMap.indexOf('parchment:'),
               $parchmentAll = $('td a', $craftables[parchmentLoc])[3];
           setTimeout(() => {
@@ -95,6 +96,7 @@ function autoCraft() {
           }, 1000);
         } else if (name === 'faith:') {
           $('#fastPraiseContainer a').click();
+          console.log('Praised the sun');
         } else {
           capped.push(name);
         }
@@ -108,8 +110,11 @@ function autoCraft() {
 
   capped.forEach(resource => {
     let idx = craftClickMap.indexOf(resource);
-    $('td a', $craftables[idx])[0].click();
-    console.log(resource + ' crafted');
+    let $addBtn = $('td a', $craftables[idx])[0];
+    if ($addBtn.style.display !== 'none') {
+      $addBtn.click();
+      console.log('Crafted: ' + resource.substr(0, resource.length - 1));
+    }
   });
 
   setTimeout(() => { autoCraft(); }, 1000);  
