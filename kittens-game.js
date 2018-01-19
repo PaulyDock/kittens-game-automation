@@ -25,6 +25,7 @@ function autoBuild(buildPriorities) {
     'Academy',
     'Library',
     'Barn',
+    'Harbour',
     'Warehouse',
     'Tradepost',
     'Workshop',
@@ -71,9 +72,9 @@ function autoCraft() {
     'minerals:': 'slab:',
     'coal:': 'steel:',
     'iron:': 'plate:',
+    'science:': 'compendium:',
     'gold:': 'TBD',
     'catpower:': 'TBD',
-    'science:': 'TBD',
     'culture:': 'TBD',
     'faith:': 'TBD'
   };
