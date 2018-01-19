@@ -78,9 +78,10 @@ function autoCraft() {
     'iron:': 'plate:',
 //     'science:': 'compendium:',
     'science:': 'TBD',
+    'culture:': 'manuscript:',
+//     'culture:': 'TBD',
     'gold:': 'TBD',
     'catpower:': 'TBD',
-    'culture:': 'TBD',
     'faith:': 'TBD'
   };
 
