@@ -61,7 +61,10 @@ function autoCraft() {
       capped = [],
       $craftables = $('#craftContainer .resourceRow');
 
-  if ($observeBtn) { $observeBtn.click(); }
+  if ($observeBtn) {
+    $observeBtn.click();
+    console.log('Observation made');
+  }
 
   let craftClickMap = $.map($craftables, craftable => {
     return $('td', craftable)[0].innerText;
@@ -73,7 +76,7 @@ function autoCraft() {
     'minerals:': 'slab:',
     'coal:': 'steel:',
     'iron:': 'plate:',
-    // 'science:': 'compendium:',
+//     'science:': 'compendium:',
     'science:': 'TBD',
     'gold:': 'TBD',
     'catpower:': 'TBD',
