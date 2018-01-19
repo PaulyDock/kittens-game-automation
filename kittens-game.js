@@ -76,13 +76,13 @@ function autoCraft() {
     'minerals:': 'slab:',
     'coal:': 'steel:',
     'iron:': 'plate:',
-//     'science:': 'compendium:',
-    'science:': 'TBD',
-    'culture:': 'manuscript:',
-//     'culture:': 'TBD',
-    'gold:': 'TBD',
-    'catpower:': 'TBD',
-    'faith:': 'TBD'
+//     'titanium:': 'TBD',
+//     'gold:': 'TBD',
+//     'catpower:': 'TBD',
+    'science:': 'compendium:',
+    'culture:': 'manuscript:'
+//     'faith:': 'TBD'
+//     'kittens:': 'TBD'
   };
 
   $.each($resCaps, (idx, elem) => {
