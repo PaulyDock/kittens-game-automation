@@ -1,5 +1,9 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
+const craftLogStyle = 'color: blue',
+      buildLogStyle = 'color: green',
+      quickEventStyle = 'font-weight: bold';
+
 function autoCatnip(ms = 5) {
   if ($('.tabsContainer .activeTab')[0].innerText === 'Bonfire') {
     $('.bldGroupContainer .btn')[0].click();
@@ -50,7 +54,7 @@ function autoBuild(buildPriorities) {
   buildPriorities.forEach(building => {
     let idx = clickableBldgNames.indexOf(building);
     if (idx > -1) {
-      console.log('Built: ' + building);
+      console.log('%cBuilt: ' + building, buildLogStyle);
       $clickableBtns[idx].click();
     }
   });
@@ -85,7 +89,7 @@ function autoCraft() {
     'iron:': 'plate:',
 //     'titanium:': 'TBD',
 //     'gold:': 'TBD',
-    // 'oil:': 'TBD',
+//     'oil:': 'TBD',
 //     'catpower:': 'TBD',
     'science:': 'compendium:',
     'culture:': 'manuscript:'
@@ -101,7 +105,7 @@ function autoCraft() {
       if (current === max.substring(1)) {
         if (name === 'catpower:') {
           $('#fastHuntContainer a')[0].click();
-          console.log('Hunted');
+          console.log('%cHunted', quickEventStyle);
           let parchmentLoc = craftClickMap.indexOf('parchment:'),
               $parchmentAll = $('td a', $craftables[parchmentLoc])[3];
           setTimeout(() => {
@@ -109,7 +113,7 @@ function autoCraft() {
           }, 1000);
         } else if (name === 'faith:') {
           $('#fastPraiseContainer a').click();
-          console.log('Praised the sun');
+          console.log('Praised the sun', quickEventStyle);
         } else {
           capped.push(name);
         }
@@ -132,10 +136,10 @@ function autoCraft() {
         let $addBtn2 = $('td a', $craftables[idx2])[0];
         if ($addBtn2.style.display !== 'none') {
           $addBtn2.click();
-          console.log('Crafted: scaffold');
+          console.log('%cCrafted: scaffold', craftLogStyle);
         }
       } else {
-        console.log('Crafted: ' + resource.substr(0, resource.length - 1));
+        console.log('%cCrafted: ' + resource.substr(0, resource.length - 1), craftLogStyle);
       }
     }
   });
@@ -154,7 +158,7 @@ function manuscriptDebug() {
 
   if ($manuscriptMinor.style.display !== 'none') {
       $manuscriptMinor.click();
-      console.log('Crafted: manuscript');
+      console.log('%cCrafted: manuscript', craftLogStyle);
   }
 
   setTimeout(manuscriptDebug, 600000);
