@@ -1,3 +1,4 @@
+//For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
 function autoCatnip(ms = 5) {
   // ms = ms || 5;
@@ -13,6 +14,12 @@ function autoBuild(buildPriorities) {
   }
 
   buildPriorities = buildPriorities || [
+    // 'Calciner',
+    // 'Hut',
+    // 'Log House',
+    // 'Mansion',
+    // 'Steamworks',
+    // 'Mint'
     'Unic. Pasture',
     'Amphitheatre',
     'Temple',
@@ -21,6 +28,7 @@ function autoBuild(buildPriorities) {
     'Pasture',
     'Lumber Mill',
     'Mine',
+    'Oil Well',
     'Observatory',
     'Academy',
     'Library',
@@ -78,6 +86,7 @@ function autoCraft() {
     'iron:': 'plate:',
 //     'titanium:': 'TBD',
 //     'gold:': 'TBD',
+    // 'oil:': 'TBD',
 //     'catpower:': 'TBD',
     'science:': 'compendium:',
     'culture:': 'manuscript:'
@@ -113,12 +122,22 @@ function autoCraft() {
     .map(resource => resCraftKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
+    //TODO: Make this a function, DRY
   capped.forEach(resource => {
     let idx = craftClickMap.indexOf(resource);
     let $addBtn = $('td a', $craftables[idx])[0];
     if ($addBtn.style.display !== 'none') {
       $addBtn.click();
-      console.log('Crafted: ' + resource.substr(0, resource.length - 1));
+      if (resource === 'beam:') {
+        let idx2 = craftClickMap.indexOf('scaffold:');
+        let $addBtn2 = $('td a', $craftables[idx2])[0];
+        if ($addBtn2.style.display !== 'none') {
+          $addBtn2.click();
+          console.log('Crafted: scaffold');
+        }
+      } else {
+        console.log('Crafted: ' + resource.substr(0, resource.length - 1));
+      }
     }
   });
 
@@ -126,7 +145,7 @@ function autoCraft() {
 };
 
 function autoAll() {
-  autoCatnip();
+  // autoCatnip();
   autoBuild();
   autoCraft();
 }
