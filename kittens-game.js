@@ -60,6 +60,7 @@ function autoBuild(buildPriorities) {
 }
 
 function autoCraft() {
+  //refactoring needed
   if ($('.tabsContainer .activeTab')[0].innerText !== 'Bonfire') {
     return;
   }
@@ -68,15 +69,22 @@ function autoCraft() {
       $resCaps = $('#resContainer .resourceRow'),
       capped = [],
       $craftables = $('#craftContainer .resourceRow');
+  let craftClickMap = $.map($craftables, craftable => {
+    return $('td', craftable)[0].innerText;
+  });
 
   if ($observeBtn) {
     $observeBtn.click();
     console.log('Observation made');
   }
 
-  let craftClickMap = $.map($craftables, craftable => {
-    return $('td', craftable)[0].innerText;
-  });
+  let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
+      $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
+
+  if ($manuscriptMinor.style.display !== 'none') {
+      $manuscriptMinor.click();
+      console.log('Crafted: manuscript');
+  }
 
   const resCraftKey = {
     'catnip:': 'wood:',
