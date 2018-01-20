@@ -1,10 +1,9 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
 function autoCatnip(ms = 5) {
-  // ms = ms || 5;
   if ($('.tabsContainer .activeTab')[0].innerText === 'Bonfire') {
     $('.bldGroupContainer .btn')[0].click();
-    setTimeout(() => { autoCatnip(ms); }, ms);
+    setTimeout(autoCatnip, ms, ms);
   }
 }
 
@@ -56,7 +55,7 @@ function autoBuild(buildPriorities) {
     }
   });
 
-  setTimeout(() => { autoBuild(); }, 5000);
+  setTimeout(autoBuild, 5000, buildPriorities);
 }
 
 function autoCraft() {
@@ -76,14 +75,6 @@ function autoCraft() {
   if ($observeBtn) {
     $observeBtn.click();
     console.log('Observation made');
-  }
-
-  let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
-      $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
-
-  if ($manuscriptMinor.style.display !== 'none') {
-      $manuscriptMinor.click();
-      console.log('Crafted: manuscript');
   }
 
   const resCraftKey = {
@@ -149,11 +140,29 @@ function autoCraft() {
     }
   });
 
-  setTimeout(() => { autoCraft(); }, 1000);  
+  setTimeout(autoCraft, 1000);  
 };
+
+function manuscriptDebug() {
+  let $craftables = $('#craftContainer .resourceRow'),
+      craftClickMap = $.map($craftables, craftable => {
+        return $('td', craftable)[0].innerText;
+      });
+  
+  let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
+      $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
+
+  if ($manuscriptMinor.style.display !== 'none') {
+      $manuscriptMinor.click();
+      console.log('Crafted: manuscript');
+  }
+
+  setTimeout(manuscriptDebug, 600000);
+}
 
 function autoAll() {
   // autoCatnip();
   autoBuild();
   autoCraft();
+  // manuscriptDebug();
 }
