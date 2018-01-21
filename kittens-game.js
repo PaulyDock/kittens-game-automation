@@ -1,18 +1,22 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-const craftLogStyle = 'color: blue',
-      buildLogStyle = 'color: green; font-weight: bold',
-      quickEventStyle = '';
+// const craftLogStyle = 'color: blue',
+//       buildLogStyle = 'color: green; font-weight: bold',
+//       quickEventStyle = '';
 
-function autoCatnip(ms = 5) {
-  if ($('.tabsContainer .activeTab')[0].innerText === 'Bonfire') {
+function getActiveTab() {
+  return $('.tabsContainer .activeTab')[0].innerText;
+}
+
+function autoCatnip(ms = 20) {
+  if (getActiveTab() === 'Bonfire') {
     $('.bldGroupContainer .btn')[0].click();
     setTimeout(autoCatnip, ms, ms);
   }
 }
 
 function autoBuild(buildPriorities) {
-  if ($('.tabsContainer .activeTab')[0].innerText !== 'Bonfire') {
+  if (getActiveTab() !== 'Bonfire') {
     return;
   }
 
@@ -25,8 +29,8 @@ function autoBuild(buildPriorities) {
     // 'Mint',
     // 'Magneto',
     'Unic. Pasture',
-//     'Amphitheatre',
-//     'Temple',
+    'Amphitheatre',
+    'Temple',
     'Aqueduct',
     'Catnip field',
     'Pasture',
@@ -37,14 +41,14 @@ function autoBuild(buildPriorities) {
     'Chapel',
     'Bio Lab',
     'Observatory',
-//     'Academy',
-//     'Library',
-//     'Barn',
-//     'Harbour',
-//     'Warehouse',
+    'Academy',
+    'Library',
+    'Barn',
+    'Harbour',
+    'Warehouse',
     'Tradepost',
     'Workshop',
-//     'Ziggurat',
+    'Ziggurat',
     'Smelter'
   ];
 
@@ -85,7 +89,7 @@ function autoCraft() {
     console.log('Observation made');
   }
 
-  const resCraftKey = {
+  const cappedResourceKey = {
     'catnip:': 'wood:',
     'wood:': 'beam:',
     'minerals:': 'slab:',
@@ -96,17 +100,99 @@ function autoCraft() {
 //     'oil:': 'TBD',
 //     'catpower:': 'TBD',
     'science:': 'compendium:',
-    'culture:': 'manuscript:'
+//     'culture:': 'manuscript:'
 //     'faith:': 'TBD'
 //     'kittens:': 'TBD'
   };
 
+  const craftableResourceKey = {
+    wood: {
+      ratios: {
+        catnip: 50
+      }
+    },
+    beam: {
+      ratios: {
+        wood: 175
+      }
+    },
+    slab: {
+      ratios: {
+        minerals: 250
+      }
+    },
+    plate: {
+      ratios: {
+        iron: 125
+      }
+    },
+    steel: {
+      ratios: {
+        iron: 100,
+        coal: 100
+      }
+    },
+    gear: {
+      ratios: {
+        steel: 15
+      }
+    },
+    alloy: {
+      ratios: {
+        steel: 75,
+        titanium: 10
+      }
+    },
+    scaffold: {
+      ratios: {
+        beam: 50
+      }
+    },
+    ship: {
+      ratios: {
+        scaffold: 100,
+        plate: 150,
+        starchart: 25
+      }
+    },
+    parchment: {
+      ratios: {
+        furs: 175
+      }
+    },
+    manuscript: {
+      ratios: {
+        parchment: 125,
+        culture: 400
+      }
+    },
+    compendium: {
+      ratios: {
+        manuscript: 50,
+        science: 10000
+      }
+    },
+    blueprint: {
+      ratios: {
+        compendium: 25,
+        science: 25000
+      }
+    },
+    megalith: {
+      ratios: {
+        slab: 50,
+        beam: 25,
+        plate: 5
+      }
+    }
+  }
+
   $.each($resCaps, (idx, elem) => {
-    let max = $('.maxRes', elem)[0].innerText,
-        current = $('.resAmount', elem)[0].innerText,
+    let max = convertQuant($('.maxRes', elem)[0].innerText),
+        current = convertQuant($('.resAmount', elem)[0].innerText),
         name = $('.resource-name', elem)[0].innerText;
     if (max && max !== 0 && max !== '') {
-      if (current === max.substring(1)) {
+      if (current >= max) {
         if (name === 'catpower:') {
           $('#fastHuntContainer a')[0].click();
           console.log('%cHunted', quickEventStyle);
@@ -126,13 +212,14 @@ function autoCraft() {
   });
 
   capped = capped
-    .map(resource => resCraftKey[resource])
+    .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
     //TODO: Make this a function, DRY
   capped.forEach(resource => {
-    let idx = craftClickMap.indexOf(resource);
-    let $addBtn = $('td a', $craftables[idx])[0];
+    let idx = craftClickMap.indexOf(resource),
+        $addBtn = $('td a', $craftables[idx])[0];
+
     if ($addBtn.style.display !== 'none') {
       $addBtn.click();
       if (resource === 'beam:') {
@@ -151,26 +238,44 @@ function autoCraft() {
   setTimeout(autoCraft, 1000);  
 };
 
-function manuscriptDebug() {
-  let $craftables = $('#craftContainer .resourceRow'),
-      craftClickMap = $.map($craftables, craftable => {
-        return $('td', craftable)[0].innerText;
-      });
+// function manuscriptDebug() {
+//   let $craftables = $('#craftContainer .resourceRow'),
+//       craftClickMap = $.map($craftables, craftable => {
+//         return $('td', craftable)[0].innerText;
+//       });
   
-  let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
-      $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
+//   let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
+//       $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
 
-  if ($manuscriptMinor.style.display !== 'none') {
-      $manuscriptMinor.click();
-      console.log('%cCrafted: manuscript (debug)', craftLogStyle);
-  }
+//   if ($manuscriptMinor.style.display !== 'none') {
+//     $manuscriptMinor.click();
+//     console.log('%cCrafted: manuscript (debug)', craftLogStyle);
+//   }
 
-  setTimeout(manuscriptDebug, 600000);
-}
+//   setTimeout(manuscriptDebug, 600000);
+// }
+
 
 function autoAll() {
   // autoCatnip();
   autoBuild();
   autoCraft();
   // manuscriptDebug();
+}
+
+
+function convertQuant(str) {
+  const conversion = {
+    K: 1000,
+    M: 1000000,
+    B: 1000000000,
+    T: 1000000000000
+  };
+
+  if (isNaN(str)) {
+    let place = str[str.length - 1];
+    str = Number(str.substring(0, str.length - 1)) * conversion[place];
+  }
+  
+  return Number(str);
 }
