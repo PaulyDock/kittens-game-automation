@@ -1,8 +1,8 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
 const craftLogStyle = 'color: blue',
-      buildLogStyle = 'color: green',
-      quickEventStyle = 'font-weight: bold';
+      buildLogStyle = 'color: green; font-weight: bold',
+      quickEventStyle = '';
 
 function autoCatnip(ms = 5) {
   if ($('.tabsContainer .activeTab')[0].innerText === 'Bonfire') {
@@ -21,26 +21,30 @@ function autoBuild(buildPriorities) {
     // 'Hut',
     // 'Log House',
     // 'Mansion',
-    // 'Steamworks',
-    // 'Mint'
+    'Steamworks',
+    // 'Mint',
+    // 'Magneto',
     'Unic. Pasture',
-    'Amphitheatre',
-    'Temple',
+//     'Amphitheatre',
+//     'Temple',
     'Aqueduct',
     'Catnip field',
     'Pasture',
+    'Quarry',
     'Lumber Mill',
     'Mine',
     'Oil Well',
+    'Chapel',
+    'Bio Lab',
     'Observatory',
-    'Academy',
-    'Library',
-    'Barn',
-    'Harbour',
-    'Warehouse',
+//     'Academy',
+//     'Library',
+//     'Barn',
+//     'Harbour',
+//     'Warehouse',
     'Tradepost',
     'Workshop',
-    'Ziggurat',
+//     'Ziggurat',
     'Smelter'
   ];
 
@@ -158,7 +162,7 @@ function manuscriptDebug() {
 
   if ($manuscriptMinor.style.display !== 'none') {
       $manuscriptMinor.click();
-      console.log('%cCrafted: manuscript', craftLogStyle);
+      console.log('%cCrafted: manuscript (debug)', craftLogStyle);
   }
 
   setTimeout(manuscriptDebug, 600000);
