@@ -1,6 +1,6 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-// let style = {
+// const style = {
 //   craft: 'color: blue',
 //   build: 'color: green; font-weight: bold',
 //   event: ''
@@ -17,12 +17,10 @@ function autoCatnip(ms = 20) {
   }
 }
 
-function autoBuild(buildPriorities) {
-  if (getActiveTab() !== 'Bonfire') {
-    return;
-  }
+function autoBuild() {
+  if (getActiveTab() !== 'Bonfire') { return; }
 
-  buildPriorities = buildPriorities || [
+  const buildPriorities = [
     'Catnip field', //catnip
     'Pasture', //catnip, wood
     'Aqueduct', //minerals
@@ -54,29 +52,25 @@ function autoBuild(buildPriorities) {
     'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
 
-  let $clickableBtns = $('.bldGroupContainer .btn').not('.disabled');
-  let clickableBldgNames = $.map($clickableBtns, (elem, idx) => {
-    let text = $('.btnContent span', elem)[0].innerText;
-    let parenLoc = text.indexOf('(');
-    return parenLoc > -1 ? text.substr(0, parenLoc - 1) : text;
+  let $clickableBldgs = $('.bldGroupContainer .btn').not('.disabled'),
+      bldgNameBtnKey = {};
+
+  $.each($clickableBldgs, (idx, elem) => {
+    let bldgName = $('.btnContent span', elem)[0].innerText,
+        parenLoc = bldgName.indexOf('(');
+    bldgName = parenLoc > -1 ? bldgName.substr(0, parenLoc - 1) : bldgName;
+    bldgNameBtnKey[bldgName] = elem;
   });
 
-//   let bldgNameBtnKey = {};
-
-//   $.each($clickableBtns, (idx, elem) => {
-//     let bldgName = $('.btnContent span', elem)[0].innerText,
-//         parenLoc = bldgName.indexOf('(');
-//     bldgName = parenLoc > -1 ? bldgName.substr(0, parenLoc - 1) : bldgName;
-//   });
-
   buildPriorities.forEach(building => {
-    let idx = clickableBldgNames.indexOf(building);
-    if (idx > -1) { console.log('%cBuilt: ' + building, style.build);
-      $clickableBtns[idx].click();
+    let $rdyBldg = bldgNameBtnKey[building];
+    if ($rdyBldg) {
+      $rdyBldg.click();
+      console.log('%cBuilt: ' + resource, style.build);
     }
   });
 
-  setTimeout(autoBuild, 5000, buildPriorities);
+  setTimeout(autoBuild, 5000);
 }
 
 
@@ -106,7 +100,7 @@ function autoCraft() {
     'minerals': 'slab',
     'coal': 'steel',
     'iron': 'plate',
-//     'titanium': 'TBD',
+    'titanium': 'alloy',
 //     'gold': 'TBD',
 //     'oil': 'TBD',
 //     'catpower': 'TBD',
@@ -248,4 +242,3 @@ function convertQuant(str) {
   
   return Number(str);
 }
-
