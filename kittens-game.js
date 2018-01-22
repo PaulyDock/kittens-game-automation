@@ -67,7 +67,7 @@ function autoBuild() {
     let $rdyBldg = bldgNameBtnKey[building];
     if ($rdyBldg) {
       $rdyBldg.click();
-      console.log('%cBuilt: ' + resource, style.build);
+      console.log('%cBuilt: ' + building, style.build);
     }
   });
 
