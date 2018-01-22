@@ -61,9 +61,17 @@ function autoBuild(buildPriorities) {
     return parenLoc > -1 ? text.substr(0, parenLoc - 1) : text;
   });
 
+//   let bldgNameBtnKey = {};
+
+//   $.each($clickableBtns, (idx, elem) => {
+//     let bldgName = $('.btnContent span', elem)[0].innerText,
+//         parenLoc = bldgName.indexOf('(');
+//     bldgName = parenLoc > -1 ? bldgName.substr(0, parenLoc - 1) : bldgName;
+//   });
+
   buildPriorities.forEach(building => {
     let idx = clickableBldgNames.indexOf(building);
-    if (idx > -1) { console.log('%cBuilt: ' + building, build);
+    if (idx > -1) { console.log('%cBuilt: ' + building, style.build);
       $clickableBtns[idx].click();
     }
   });
@@ -83,7 +91,8 @@ function autoCraft() {
       $craftables = $('#craftContainer .resourceRow');
   
   let craftClickMap = $.map($craftables, craftable => {
-    return $('td', craftable)[0].innerText;
+    let name = $('td', craftable)[0].innerText;
+    return name.substr(0, name.length - 1);
   });
 
   if ($observeBtn) {
@@ -92,17 +101,17 @@ function autoCraft() {
   }
 
   const cappedResourceKey = {
-    'catnip': 'wood:',
-    'wood': 'beam:',
-    'minerals': 'slab:',
-    'coal': 'steel:',
-    'iron': 'plate:',
+    'catnip': 'wood',
+    'wood': 'beam',
+    'minerals': 'slab',
+    'coal': 'steel',
+    'iron': 'plate',
 //     'titanium': 'TBD',
 //     'gold': 'TBD',
 //     'oil': 'TBD',
 //     'catpower': 'TBD',
-    'science': 'compendium:',
-    'culture': 'manuscript:',
+    'science': 'compendium',
+    'culture': 'manuscript',
 //     'faith': 'TBD',
 //     'kittens': 'TBD',
   };
@@ -176,9 +185,7 @@ function autoCraft() {
           console.log('%cHunted', quickEventStyle);
           let parchmentLoc = craftClickMap.indexOf('parchment'),
               $parchmentAll = $('td a', $craftables[parchmentLoc])[3];
-          setTimeout(() => {
-            $parchmentAll.click();
-          }, 1000);
+          setTimeout(() => { $parchmentAll.click(); }, 1000);
         } else if (name === 'faith') {
           $('#fastPraiseContainer a').click();
           console.log('Praised the sun', quickEventStyle);
@@ -210,7 +217,7 @@ function autoCraft() {
           console.log('%cCrafted: scaffold', style.craft);
         }
       } else {
-        console.log('%cCrafted: ' + resource.substr(0, resource.length - 1), style.craft);
+        console.log('%cCrafted: ' + resource, style.craft);
       }
     }
   });
@@ -241,3 +248,4 @@ function convertQuant(str) {
   
   return Number(str);
 }
+
