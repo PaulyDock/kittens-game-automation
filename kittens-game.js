@@ -1,10 +1,10 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-let style = {
-  craft: 'color: blue',
-  build: 'color: green; font-weight: bold',
-  event: ''
-};
+// let style = {
+//   craft: 'color: blue',
+//   build: 'color: green; font-weight: bold',
+//   event: ''
+// };
 
 function getActiveTab() {
   return $('.tabsContainer .activeTab')[0].innerText;
@@ -162,18 +162,16 @@ function autoCraft() {
   }
 
 
-
   $.each($resCaps, (idx, elem) => {
     let max = $('.maxRes', elem)[0].innerText,
         current = convertQuant($('.resAmount', elem)[0].innerText),
         name = $('.resource-name', elem)[0].innerText;
-
     max = convertQuant(max.substring(1, max.length));
     name = name.substr(0, name.length - 1);
     
     if (max && max !== 0 && max !== '') {
       if (current >= max) {
-        if (name === 'catpower:') {
+        if (name === 'catpower') {
           $('#fastHuntContainer a')[0].click();
           console.log('%cHunted', quickEventStyle);
           let parchmentLoc = craftClickMap.indexOf('parchment'),
@@ -243,6 +241,3 @@ function convertQuant(str) {
   
   return Number(str);
 }
-
-
-//discard colon from craftables. Refactor style declarations. remove manuscriptDebug. 
