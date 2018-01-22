@@ -42,6 +42,7 @@ function autoBuild() {
     // 'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
+    // "Factory", //titanium, plate, concrete
     // 'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
@@ -75,24 +76,35 @@ function autoBuild() {
 
 
 function autoCraft() {
-  if ($('.tabsContainer .activeTab')[0].innerText !== 'Bonfire') {
-    return;
+  if (getActiveTab() !== 'Bonfire') { return; }
+
+  let $observeBtn = $('#observeBtn')[0];
+  if ($observeBtn) {
+    $observeBtn.click();
+    console.log('Observation made');
   }
 
-  let $observeBtn = $('#observeBtn')[0],
-      $resCaps = $('#resContainer .resourceRow'),
+  let $resCaps = $('#resContainer .resourceRow'),
       capped = [],
-      $craftables = $('#craftContainer .resourceRow');
+      $craftables = $('#craftContainer .resourceRow'),
+      craftablesKey = {};
   
+  //Remove after refactor
   let craftClickMap = $.map($craftables, craftable => {
     let name = $('td', craftable)[0].innerText;
     return name.substr(0, name.length - 1);
   });
 
-  if ($observeBtn) {
-    $observeBtn.click();
-    console.log('Observation made');
-  }
+  $.each($craftables, (idx, craftable) => {
+    let name = $('td', craftable)[0].innerText;
+    name = name.substr(0, name.length - 1);
+    craftablesKey[name] = craftable;
+  });
+
+  // function getAmount(resource) {
+  //   return convertQuant();
+
+  // }
 
   const cappedResourceKey = {
     'catnip': 'wood',
@@ -126,6 +138,10 @@ function autoCraft() {
     steel: {
       iron: 100,
       coal: 100
+    },
+    concrete: {
+      slab: 2500,
+      steel: 25
     },
     gear: {
       steel: 15
@@ -194,7 +210,6 @@ function autoCraft() {
     .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
-  // function getResourceAmount
 
     //TODO: Make this a function, DRY
   capped.forEach(resource => {
@@ -223,7 +238,6 @@ function autoAll() {
   // autoCatnip();
   autoBuild();
   autoCraft();
-  // manuscriptDebug();
 }
 
 
