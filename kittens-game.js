@@ -20,6 +20,7 @@ function autoCatnip(ms = 20) {
 function autoBuild() {
   if (getActiveTab() !== 'Bonfire') { return; }
 
+  //adjust to determine which buildings are checked for autoBuild
   const buildPriorities = [
     'Catnip field', //catnip
     'Pasture', //catnip, wood
@@ -84,28 +85,7 @@ function autoCraft() {
     console.log('Observation made');
   }
 
-  let $resCaps = $('#resContainer .resourceRow'),
-      capped = [],
-      $craftables = $('#craftContainer .resourceRow'),
-      craftablesKey = {};
-  
-  //Remove after refactor
-  let craftClickMap = $.map($craftables, craftable => {
-    let name = $('td', craftable)[0].innerText;
-    return name.substr(0, name.length - 1);
-  });
-
-  $.each($craftables, (idx, craftable) => {
-    let name = $('td', craftable)[0].innerText;
-    name = name.substr(0, name.length - 1);
-    craftablesKey[name] = craftable;
-  });
-
-  // function getAmount(resource) {
-  //   return convertQuant();
-
-  // }
-
+  //adjust to activate which capped resources autoCraft when complete
   const cappedResourceKey = {
     'catnip': 'wood',
     'wood': 'beam',
@@ -115,12 +95,19 @@ function autoCraft() {
     'titanium': 'alloy',
 //     'gold': 'TBD',
 //     'oil': 'TBD',
-//     'catpower': 'TBD',
-    'science': 'compendium',
-    'culture': 'manuscript',
-//     'faith': 'TBD',
+//     'catpower': 'TBD', //auto-hunts special case
+    'science': 'compendium', //risky
+    'culture': 'manuscript', //risky
+//     'faith': 'TBD', //auto-praise special case
 //     'kittens': 'TBD',
   };
+
+  //determines which uncapped, craftable resources check for autoCraft
+  const craftableList = {
+
+  };
+
+  const ratioModifier = 3.94; //probably adjust to fit workshop bonus
 
   const craftRecipes = {
     wood: {
@@ -181,6 +168,24 @@ function autoCraft() {
   }
 
 
+  let $resCaps = $('#resContainer .resourceRow'),
+      capped = [],
+      $craftables = $('#craftContainer .resourceRow'),
+      craftablesKey = {};
+
+  //Remove after refactor
+  let craftClickMap = $.map($craftables, craftable => {
+    let name = $('td', craftable)[0].innerText;
+    return name.substr(0, name.length - 1);
+  });
+
+
+  $.each($craftables, (idx, craftable) => {
+    let name = $('td', craftable)[0].innerText;
+    name = name.substr(0, name.length - 1);
+    craftablesKey[name] = craftable;
+  });
+
   $.each($resCaps, (idx, elem) => {
     let max = $('.maxRes', elem)[0].innerText,
         current = convertQuant($('.resAmount', elem)[0].innerText),
@@ -210,6 +215,15 @@ function autoCraft() {
     .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
+  function getAmount(resource) {
+    return convertQuant(craftablesKey[resource][1]);
+  }
+
+  function convert(resource, convertCol) {
+    //convertCol from 1-4, not 0-3
+    let $resourceRow = craftablesKey[resource];
+    $('td a', $resourceRow)[convertCol - 1].click();
+  }
 
     //TODO: Make this a function, DRY
   capped.forEach(resource => {
