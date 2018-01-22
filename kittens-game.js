@@ -21,35 +21,35 @@ function autoBuild(buildPriorities) {
   }
 
   buildPriorities = buildPriorities || [
-    // 'Calciner',
-    // 'Hut',
-    // 'Log House',
-    // 'Mansion',
-    'Steamworks',
-    // 'Mint',
-    // 'Magneto',
-    'Unic. Pasture',
-    'Amphitheatre',
-    'Temple',
-    'Aqueduct',
-    'Catnip field',
-    'Pasture',
-    'Quarry',
-    'Lumber Mill',
-    'Mine',
-    'Oil Well',
-    'Chapel',
-    'Bio Lab',
-    'Observatory',
-    'Academy',
-    'Library',
-    'Barn',
-    'Harbour',
-    'Warehouse',
-    'Tradepost',
-    'Workshop',
-    'Ziggurat',
-    'Smelter'
+    'Catnip field', //catnip
+    'Pasture', //catnip, wood
+    'Aqueduct', //minerals
+    // 'Hut', //wood
+    // 'Log House', //wood, minerals
+    // 'Mansion', //slab, steel, titanium
+    'Library', //wood
+    'Academy', //wood, minerals, science
+    'Observatory', //scaffold, slab, iron, science
+    'Bio Lab', //slab, alloy, science
+    'Barn', //wood
+    'Warehouse', //beam, slab
+    'Harbour', //scaffold, slab, plate
+    'Mine', //minerals, plate, gold
+    'Quarry', //scaffold, steel, slab
+    'Lumber Mill', //wood, minerals, iron
+    'Oil Well', //steel, gear, scaffold
+    'Steamworks', //steel, gear, blueprint
+    // 'Magneto', //alloy, gear, blueprint
+    'Smelter', //minerals
+    // 'Calciner', //steel, titanium, blueprint, oil
+    // 'Amphitheatre', //wood, minerals, parchment
+    'Chapel', //minerals, culture, parchment
+    'Temple', //slab, plate, gold, manuscript
+    'Workshop', //wood, minerals
+    'Tradepost', //wood, minerals, gold
+    'Mint', //minerals, plate, gold
+    'Unic. Pasture', //unicorns
+    'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
 
   let $clickableBtns = $('.bldGroupContainer .btn').not('.disabled');
@@ -100,92 +100,66 @@ function autoCraft() {
 //     'oil:': 'TBD',
 //     'catpower:': 'TBD',
     'science:': 'compendium:',
-//     'culture:': 'manuscript:'
-//     'faith:': 'TBD'
-//     'kittens:': 'TBD'
+//     'culture:': 'manuscript:',
+//     'faith:': 'TBD',
+//     'kittens:': 'TBD',
   };
 
-  const craftableResourceKey = {
+  const craftRecipes = {
     wood: {
-      ratios: {
-        catnip: 50
-      }
+      catnip: 50
     },
     beam: {
-      ratios: {
-        wood: 175
-      }
+      wood: 175
     },
     slab: {
-      ratios: {
-        minerals: 250
-      }
+      minerals: 250
     },
     plate: {
-      ratios: {
-        iron: 125
-      }
+      iron: 125
     },
     steel: {
-      ratios: {
-        iron: 100,
-        coal: 100
-      }
+      iron: 100,
+      coal: 100
     },
     gear: {
-      ratios: {
-        steel: 15
-      }
+      steel: 15
     },
     alloy: {
-      ratios: {
-        steel: 75,
-        titanium: 10
-      }
+      steel: 75,
+      titanium: 10
     },
     scaffold: {
-      ratios: {
-        beam: 50
-      }
+      beam: 50
     },
     ship: {
-      ratios: {
-        scaffold: 100,
-        plate: 150,
-        starchart: 25
-      }
+      scaffold: 100,
+      plate: 150,
+      starchart: 25
     },
     parchment: {
-      ratios: {
-        furs: 175
-      }
+      furs: 175
     },
     manuscript: {
-      ratios: {
-        parchment: 125,
-        culture: 400
-      }
+      parchment: 125,
+      culture: 400
     },
     compendium: {
-      ratios: {
-        manuscript: 50,
-        science: 10000
-      }
+      manuscript: 50,
+      science: 10000
     },
     blueprint: {
-      ratios: {
-        compendium: 25,
-        science: 25000
-      }
+      compendium: 25,
+      science: 25000
     },
     megalith: {
-      ratios: {
-        slab: 50,
-        beam: 25,
-        plate: 5
-      }
+      slab: 50,
+      beam: 25,
+      plate: 5
     }
   }
+
+
 
   $.each($resCaps, (idx, elem) => {
     let max = convertQuant($('.maxRes', elem)[0].innerText),
