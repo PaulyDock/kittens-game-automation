@@ -1,8 +1,10 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-// const craftLogStyle = 'color: blue',
-//       buildLogStyle = 'color: green; font-weight: bold',
-//       quickEventStyle = '';
+let style = {
+  craft: 'color: blue',
+  build: 'color: green; font-weight: bold',
+  event: ''
+};
 
 function getActiveTab() {
   return $('.tabsContainer .activeTab')[0].innerText;
@@ -61,8 +63,7 @@ function autoBuild(buildPriorities) {
 
   buildPriorities.forEach(building => {
     let idx = clickableBldgNames.indexOf(building);
-    if (idx > -1) {
-      console.log('%cBuilt: ' + building, buildLogStyle);
+    if (idx > -1) { console.log('%cBuilt: ' + building, build);
       $clickableBtns[idx].click();
     }
   });
@@ -70,8 +71,8 @@ function autoBuild(buildPriorities) {
   setTimeout(autoBuild, 5000, buildPriorities);
 }
 
+
 function autoCraft() {
-  //refactoring needed
   if ($('.tabsContainer .activeTab')[0].innerText !== 'Bonfire') {
     return;
   }
@@ -80,6 +81,7 @@ function autoCraft() {
       $resCaps = $('#resContainer .resourceRow'),
       capped = [],
       $craftables = $('#craftContainer .resourceRow');
+  
   let craftClickMap = $.map($craftables, craftable => {
     return $('td', craftable)[0].innerText;
   });
@@ -90,19 +92,19 @@ function autoCraft() {
   }
 
   const cappedResourceKey = {
-    'catnip:': 'wood:',
-    'wood:': 'beam:',
-    'minerals:': 'slab:',
-    'coal:': 'steel:',
-    'iron:': 'plate:',
-//     'titanium:': 'TBD',
-//     'gold:': 'TBD',
-//     'oil:': 'TBD',
-//     'catpower:': 'TBD',
-    'science:': 'compendium:',
-//     'culture:': 'manuscript:',
-//     'faith:': 'TBD',
-//     'kittens:': 'TBD',
+    'catnip': 'wood:',
+    'wood': 'beam:',
+    'minerals': 'slab:',
+    'coal': 'steel:',
+    'iron': 'plate:',
+//     'titanium': 'TBD',
+//     'gold': 'TBD',
+//     'oil': 'TBD',
+//     'catpower': 'TBD',
+    'science': 'compendium:',
+    'culture': 'manuscript:',
+//     'faith': 'TBD',
+//     'kittens': 'TBD',
   };
 
   const craftRecipes = {
@@ -162,20 +164,24 @@ function autoCraft() {
 
 
   $.each($resCaps, (idx, elem) => {
-    let max = convertQuant($('.maxRes', elem)[0].innerText),
+    let max = $('.maxRes', elem)[0].innerText,
         current = convertQuant($('.resAmount', elem)[0].innerText),
         name = $('.resource-name', elem)[0].innerText;
+
+    max = convertQuant(max.substring(1, max.length));
+    name = name.substr(0, name.length - 1);
+    
     if (max && max !== 0 && max !== '') {
       if (current >= max) {
         if (name === 'catpower:') {
           $('#fastHuntContainer a')[0].click();
           console.log('%cHunted', quickEventStyle);
-          let parchmentLoc = craftClickMap.indexOf('parchment:'),
+          let parchmentLoc = craftClickMap.indexOf('parchment'),
               $parchmentAll = $('td a', $craftables[parchmentLoc])[3];
           setTimeout(() => {
             $parchmentAll.click();
           }, 1000);
-        } else if (name === 'faith:') {
+        } else if (name === 'faith') {
           $('#fastPraiseContainer a').click();
           console.log('Praised the sun', quickEventStyle);
         } else {
@@ -189,6 +195,8 @@ function autoCraft() {
     .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
+  // function getResourceAmount
+
     //TODO: Make this a function, DRY
   capped.forEach(resource => {
     let idx = craftClickMap.indexOf(resource),
@@ -196,39 +204,21 @@ function autoCraft() {
 
     if ($addBtn.style.display !== 'none') {
       $addBtn.click();
-      if (resource === 'beam:') {
-        let idx2 = craftClickMap.indexOf('scaffold:');
+      if (resource === 'beam') {
+        let idx2 = craftClickMap.indexOf('scaffold');
         let $addBtn2 = $('td a', $craftables[idx2])[0];
         if ($addBtn2.style.display !== 'none') {
           $addBtn2.click();
-          console.log('%cCrafted: scaffold', craftLogStyle);
+          console.log('%cCrafted: scaffold', style.craft);
         }
       } else {
-        console.log('%cCrafted: ' + resource.substr(0, resource.length - 1), craftLogStyle);
+        console.log('%cCrafted: ' + resource.substr(0, resource.length - 1), style.craft);
       }
     }
   });
 
   setTimeout(autoCraft, 1000);  
 };
-
-// function manuscriptDebug() {
-//   let $craftables = $('#craftContainer .resourceRow'),
-//       craftClickMap = $.map($craftables, craftable => {
-//         return $('td', craftable)[0].innerText;
-//       });
-  
-//   let manuscriptLoc = craftClickMap.indexOf('manuscript:'),
-//       $manuscriptMinor = $('td a', $craftables[manuscriptLoc])[0];
-
-//   if ($manuscriptMinor.style.display !== 'none') {
-//     $manuscriptMinor.click();
-//     console.log('%cCrafted: manuscript (debug)', craftLogStyle);
-//   }
-
-//   setTimeout(manuscriptDebug, 600000);
-// }
-
 
 function autoAll() {
   // autoCatnip();
@@ -253,3 +243,6 @@ function convertQuant(str) {
   
   return Number(str);
 }
+
+
+//discard colon from craftables. Refactor style declarations. remove manuscriptDebug. 
