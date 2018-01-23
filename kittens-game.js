@@ -200,7 +200,7 @@ function autoCraft() {
       
       } else if (name === 'faith') {
         $('#fastPraiseContainer a').click();
-        console.log('%cPraised the sun', quickEventStyle);
+        console.log('%cPraised the sun', style.event);
       
       } else { capped.push(name); }
     }
