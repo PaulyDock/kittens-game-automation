@@ -1,10 +1,10 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-// const style = {
-//   craft: 'color: blue',
-//   build: 'color: green; font-weight: bold',
-//   event: ''
-// };
+style = {
+  craft: 'color: blue',
+  build: 'color: green; font-weight: bold',
+  event: ''
+};
 
 
 function getActiveTab() {
