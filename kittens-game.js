@@ -1,10 +1,10 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
-const style = {
-  craft: 'color: blue',
-  build: 'color: green; font-weight: bold',
-  event: ''
-};
+// const style = {
+//   craft: 'color: blue',
+//   build: 'color: green; font-weight: bold',
+//   event: ''
+// };
 
 
 function getActiveTab() {
@@ -39,15 +39,15 @@ function autoBuild() {
     'Warehouse', //beam, slab
     'Harbour', //scaffold, slab, plate
     'Mine', //minerals, plate, gold
-    // 'Quarry', //scaffold, steel, slab
+    'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
-    // 'Oil Well', //steel, gear, scaffold
+    'Oil Well', //steel, gear, scaffold
     // 'Steamworks', //steel, gear, blueprint
     // 'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
     // "Factory", //titanium, plate, concrete
-    // 'Amphitheatre', //wood, minerals, parchment
+    'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
@@ -100,12 +100,12 @@ function autoCraft() {
     // 'oil': 'TBD',
     // 'catpower': 'TBD', //auto-hunts special case
     'science': 'compendium', //risky
-    // 'culture': 'manuscript', //risky
+    'culture': 'manuscript', //risky
     // 'faith': 'TBD', //auto-praise special case
     // 'kittens': 'TBD',
   };
 
-  const ratioModifier = 4.05; //probably adjust to fit workshop bonus
+  const ratioModifier = 4.11; //probably adjust to fit workshop bonus
 
   //adjust to activate/deactive resources to consider for autoCrafting
   //also can adjust which materials are considered
@@ -116,8 +116,8 @@ function autoCraft() {
     // slab: { minerals: 250 },
     // plate: { iron: 125 },
     // steel: { iron: 100, coal: 100 },
-    // concrete: { slab: 2500, steel: 25 },
-    // gear: { steel: 15 },
+    concrete: { slab: 2500, steel: 25 },
+    gear: { steel: 15 },
     // alloy: { steel: 75, titanium: 10 },
     scaffold: { beam: 50 },
     ship: { scaffold: 100, plate: 150,
