@@ -47,7 +47,7 @@ function autoBuild() {
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
     // "Factory", //titanium, plate, concrete
-    'Amphitheatre', //wood, minerals, parchment
+//     'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
@@ -71,7 +71,7 @@ function autoBuild() {
     let $rdyBldg = bldgNameBtnKey[building];
     if ($rdyBldg) {
       $rdyBldg.click();
-      console.log('%cBuilt: ' + building, style.build);
+      console.log('%cBuilt: ' + building + ' ' + new Date(Date.now()).toLocaleTimeString(), style.build);
     }
   });
 
@@ -105,7 +105,7 @@ function autoCraft() {
     // 'kittens': 'TBD',
   };
 
-  const ratioModifier = 4.11; //probably adjust to fit workshop bonus
+  const ratioModifier = 4.23; //probably adjust to fit workshop bonus
 
   //adjust to activate/deactive resources to consider for autoCrafting
   //also can adjust which materials are considered
@@ -127,9 +127,9 @@ function autoCraft() {
     manuscript: { parchment: 125,
                   // culture: 400
                 },
-    // compendium: { manuscript: 50,
-    //               // science: 10000
-    //             },
+    compendium: { manuscript: 50,
+                  // science: 10000
+                },
     blueprint: { compendium: 25,
                  // science: 25000
                },
@@ -144,15 +144,18 @@ function autoCraft() {
   }
 
 
-  function craft(resource, convertCol) {
+  function craft(resource, convertCol = 1) {
     //convertCol from 1-4, not 0-3
     let $resourceRow = craftablesKey[resource],
         $craftBtn = $('td a', $resourceRow)[convertCol - 1];
-    
+
     if ($craftBtn.style.display !== 'none') {
       $craftBtn.click();
       // console.log('%cCrafted: ' + resource, style.craft);
+      return true;
     }
+
+    return false;
   }
 
 
@@ -170,11 +173,6 @@ function autoCraft() {
       $craftables = $('#craftContainer .resourceRow'),
       craftablesKey = {};
 
-  //Remove after refactor
-  let craftClickMap = $.map($craftables, craftable => {
-    let name = $('td', craftable)[0].innerText;
-    return name.substr(0, name.length - 1);
-  });
 
   //build reference for DOM element by resource name
   $.each($craftables, (idx, craftable) => {
@@ -195,12 +193,12 @@ function autoCraft() {
     if (max && max !== 0 && max !== '' && current >= max) {
       if (name === 'catpower') {
         $('#fastHuntContainer a')[0].click();
-        console.log('%cHunted', style.event);
+        console.log('%cHunted ' + new Date(Date.now()).toLocaleTimeString(), style.event);
         setTimeout(craft, 1000, 'parchment', 4);
       
       } else if (name === 'faith') {
         $('#fastPraiseContainer a').click();
-        console.log('%cPraised the sun', style.event);
+        console.log('%cPraised the sun ' + new Date(Date.now()).toLocaleTimeString(), style.event);
       
       } else { capped.push(name); }
     }
@@ -210,10 +208,14 @@ function autoCraft() {
     .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
-  capped.forEach(resource => craft(resource, 1));
+  capped.forEach(resource => craft(resource));
 
   for (let craftable in craftRecipes) {
-    if (testRatios(craftable)) { craft(craftable, 1); }
+    if (testRatios(craftable)) {
+      if (!craft(craftable) && craftable === 'compendium') {
+        craft('blueprint');
+      }
+    }
   }
 
   setTimeout(autoCraft, 1000);  
