@@ -1,9 +1,16 @@
 //For use with Kittens Game:  http://bloodrizer.ru/games/kittens/#
 
+// temporary undeclared variables during development.
 style = {
   craft: 'color: blue',
   build: 'color: green; font-weight: bold',
   event: ''
+};
+
+intervalIDs = {
+  gatherCatnip: null,
+  buildAll: null,
+  craftAll: null
 };
 
 
@@ -12,18 +19,40 @@ function getActiveTab() {
 }
 
 
-function autoCatnip(ms = 20) {
-  if (getActiveTab() === 'Bonfire') {
-    $('.bldGroupContainer .btn')[0].click();
-    setTimeout(autoCatnip, ms, ms);
+function convertQuant(str) {
+  const conversion = {
+    K: 1000,
+    M: 1000000,
+    B: 1000000000,
+    T: 1000000000000
+  };
+
+  if (isNaN(str)) {
+    let place = str[str.length - 1];
+    str = Number(str.substring(0, str.length - 1)) * conversion[place];
   }
+  
+  return Number(str);
 }
 
 
-function autoBuild() {
-  if (getActiveTab() !== 'Bonfire') { return; }
+function gatherCatnip() {
+  if (getActiveTab() !== 'Bonfire') {
+    // stopAuto(gatherCatnip);
+    return;
+  }
 
-  //adjust to determine which buildings are checked for autoBuild
+  $('.bldGroupContainer .btn')[0].click();
+}
+
+
+function buildAll() {
+  if (getActiveTab() !== 'Bonfire') {
+    // stopAuto(buildAll);
+    return;
+  }
+
+  //adjust to determine which buildings are checked for buildAll
   const buildPriorities = [
     'Catnip field', //catnip
     'Pasture', //catnip, wood
@@ -47,12 +76,12 @@ function autoBuild() {
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
     // "Factory", //titanium, plate, concrete
-//     'Amphitheatre', //wood, minerals, parchment
+    // 'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
     'Tradepost', //wood, minerals, gold
-    'Mint', //minerals, plate, gold
+    // 'Mint', //minerals, plate, gold
     'Unic. Pasture', //unicorns
     'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
@@ -75,20 +104,18 @@ function autoBuild() {
     }
   });
 
-  setTimeout(autoBuild, 5000);
 }
 
 
-function autoCraft() {
-  if (getActiveTab() !== 'Bonfire') { return; }
+function craftAll() {
 
   let $observeBtn = $('#observeBtn')[0];
   if ($observeBtn) {
     $observeBtn.click();
-    console.log('Observation made');
+    // console.log('Observation made');
   }
 
-  //adjust to activate which capped resources autoCraft when complete
+  //adjust to activate which capped resources craftAll when complete
   const cappedResourceKey = {
     'catnip': 'wood',
     'wood': 'beam',
@@ -154,7 +181,6 @@ function autoCraft() {
       // console.log('%cCrafted: ' + resource, style.craft);
       return true;
     }
-
     return false;
   }
 
@@ -218,28 +244,54 @@ function autoCraft() {
     }
   }
 
-  setTimeout(autoCraft, 1000);  
 };
 
-function autoAll() {
-  // autoCatnip();
-  autoBuild();
-  autoCraft();
-}
 
+function auto(Fn, ms) {
+  if (intervalIDs[Fn.name]) { clearInterval(intervalIDs[Fn.name]); }
 
-function convertQuant(str) {
-  const conversion = {
-    K: 1000,
-    M: 1000000,
-    B: 1000000000,
-    T: 1000000000000
+  const defaults = {
+    gatherCatnip: 10,
+    buildAll: 5000,
+    craftAll: 1000
   };
+  ms = ms || defaults[Fn.name];
 
-  if (isNaN(str)) {
-    let place = str[str.length - 1];
-    str = Number(str.substring(0, str.length - 1)) * conversion[place];
-  }
-  
-  return Number(str);
+  intervalIDs[Fn.name] = setInterval(Fn, ms);
+  console.log('Auto ' + Fn.name + ' started');
 }
+
+
+function autoAll(ms) {
+  // auto(gatherCatnip, ms);
+  auto(buildAll);
+  auto(craftAll);
+}
+
+
+function stopAuto(Fn) {
+  if (intervalIDs[Fn.name]) {
+    clearInterval(intervalIDs[Fn.name]);
+    console.log('Auto ' + Fn.name + ' stopped');    
+  } else {
+    console.error('no ID for setInterval ' + Fn.name);
+  }
+}
+
+
+function stopAll() {
+  // stopAuto(gatherCatnip);
+  stopAuto(buildAll);
+  stopAuto(craftAll);
+}
+
+
+function aa() { autoAll(); }
+function sa() { stopAll(); }
+function ac() { auto(craftAll); }
+function sc() { stopAuto(craftAll); }
+function ab() { auto(buildAll); }
+function sb() { stopAuto(buildAll); }
+function cat() { auto(gatherCatnip); }
+function scat() { stopAuto(gatherCatnip); }
+
