@@ -57,9 +57,9 @@ function buildAll() {
     'Catnip field', //catnip
     'Pasture', //catnip, wood
     'Aqueduct', //minerals
-    // 'Hut', //wood
-    // 'Log House', //wood, minerals
-    // 'Mansion', //slab, steel, titanium
+    'Hut', //wood
+    'Log House', //wood, minerals
+//     'Mansion', //slab, steel, titanium
     'Library', //wood
     'Academy', //wood, minerals, science
     'Observatory', //scaffold, slab, iron, science
@@ -71,24 +71,25 @@ function buildAll() {
     'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
     'Oil Well', //steel, gear, scaffold
-    // 'Steamworks', //steel, gear, blueprint
+//     'Steamworks', //steel, gear, blueprint
     // 'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
     // "Factory", //titanium, plate, concrete
-    // 'Amphitheatre', //wood, minerals, parchment
+    'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
     'Tradepost', //wood, minerals, gold
-    // 'Mint', //minerals, plate, gold
+    'Mint', //minerals, plate, gold
     'Unic. Pasture', //unicorns
     'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
 
   let $clickableBldgs = $('.bldGroupContainer .btn').not('.disabled'),
-      bldgNameBtnKey = {};
-
+      bldgNameBtnKey = {},
+      $rdyBldg;
+      
   $.each($clickableBldgs, (idx, elem) => {
     let bldgName = $('.btnContent span', elem)[0].innerText,
         parenLoc = bldgName.indexOf('(');
@@ -96,13 +97,15 @@ function buildAll() {
     bldgNameBtnKey[bldgName] = elem;
   });
 
-  buildPriorities.forEach(building => {
-    let $rdyBldg = bldgNameBtnKey[building];
+//   buildPriorities.forEach(building => {
+  for (let building of buildPriorities) {
+    $rdyBldg = bldgNameBtnKey[building];
     if ($rdyBldg) {
       $rdyBldg.click();
       console.log('%cBuilt: ' + building + ' ' + new Date(Date.now()).toLocaleTimeString(), style.build);
+      break;
     }
-  });
+  };
 
 }
 
@@ -132,7 +135,7 @@ function craftAll() {
     // 'kittens': 'TBD',
   };
 
-  const ratioModifier = 4.23; //probably adjust to fit workshop bonus
+  const ratioModifier = 10; //probably adjust to fit workshop bonus
 
   //adjust to activate/deactive resources to consider for autoCrafting
   //also can adjust which materials are considered
@@ -143,13 +146,13 @@ function craftAll() {
     // slab: { minerals: 250 },
     // plate: { iron: 125 },
     // steel: { iron: 100, coal: 100 },
-    concrete: { slab: 2500, steel: 25 },
-    gear: { steel: 15 },
+//     concrete: { slab: 2500, steel: 25 },
+//     gear: { steel: 15 },
     // alloy: { steel: 75, titanium: 10 },
     scaffold: { beam: 50 },
-    ship: { scaffold: 100, plate: 150,
-            // starchart: 25
-          },
+//     ship: { scaffold: 100, plate: 150,
+//             // starchart: 25
+//           },
     // parchment: { furs: 175 },
     manuscript: { parchment: 125,
                   // culture: 400
@@ -157,10 +160,10 @@ function craftAll() {
     compendium: { manuscript: 50,
                   // science: 10000
                 },
-    blueprint: { compendium: 25,
-                 // science: 25000
-               },
-    megalith: { slab: 50, beam: 25, plate: 5 }
+//     blueprint: { compendium: 25,
+//                  // science: 25000
+//                },
+//     megalith: { slab: 50, beam: 25, plate: 5 }
   };
 
 
@@ -234,14 +237,13 @@ function craftAll() {
     .map(resource => cappedResourceKey[resource])
     .filter(craftable => craftable && craftable !== 'TBD');
 
-  capped.forEach(resource => craft(resource));
+  capped.forEach(resource => {
+    craft(resource);
+//     if (!craft(resource) && resource === 'compendium') { craft('blueprint'); }
+  });
 
   for (let craftable in craftRecipes) {
-    if (testRatios(craftable)) {
-      if (!craft(craftable) && craftable === 'compendium') {
-        craft('blueprint');
-      }
-    }
+    if (testRatios(craftable)) { craft(craftable); }
   }
 
 };
@@ -251,7 +253,7 @@ function auto(Fn, ms) {
   if (intervalIDs[Fn.name]) { clearInterval(intervalIDs[Fn.name]); }
 
   const defaults = {
-    gatherCatnip: 10,
+    gatherCatnip: 20,
     buildAll: 5000,
     craftAll: 1000
   };
@@ -263,7 +265,7 @@ function auto(Fn, ms) {
 
 
 function autoAll(ms) {
-  // auto(gatherCatnip, ms);
+//   auto(gatherCatnip, ms);
   auto(buildAll);
   auto(craftAll);
 }
@@ -272,7 +274,7 @@ function autoAll(ms) {
 function stopAuto(Fn) {
   if (intervalIDs[Fn.name]) {
     clearInterval(intervalIDs[Fn.name]);
-    console.log('Auto ' + Fn.name + ' stopped');    
+    console.log('Auto ' + Fn.name + ' stopped');   
   } else {
     console.error('no ID for setInterval ' + Fn.name);
   }
@@ -280,7 +282,7 @@ function stopAuto(Fn) {
 
 
 function stopAll() {
-  // stopAuto(gatherCatnip);
+//   stopAuto(gatherCatnip);
   stopAuto(buildAll);
   stopAuto(craftAll);
 }
