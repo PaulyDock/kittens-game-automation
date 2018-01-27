@@ -76,7 +76,7 @@ function buildAll() {
     'Smelter', //minerals
     // 'Calciner', //steel, titanium, blueprint, oil
     // "Factory", //titanium, plate, concrete
-    'Amphitheatre', //wood, minerals, parchment
+//     'Amphitheatre', //wood, minerals, parchment
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
@@ -89,7 +89,7 @@ function buildAll() {
   let $clickableBldgs = $('.bldGroupContainer .btn').not('.disabled'),
       bldgNameBtnKey = {},
       $rdyBldg;
-      
+
   $.each($clickableBldgs, (idx, elem) => {
     let bldgName = $('.btnContent span', elem)[0].innerText,
         parenLoc = bldgName.indexOf('(');
@@ -154,9 +154,9 @@ function craftAll() {
 //             // starchart: 25
 //           },
     // parchment: { furs: 175 },
-    manuscript: { parchment: 125,
-                  // culture: 400
-                },
+//     manuscript: { parchment: 125,
+//                   // culture: 400
+//                 },
     compendium: { manuscript: 50,
                   // science: 10000
                 },
@@ -197,6 +197,40 @@ function craftAll() {
   }
 
 
+  function trade(toSell) {
+    const tradeKey = {
+        minerals: {
+            race: 'lizards',
+            preCraft: 'beam'
+        },
+        iron: {
+            race: 'sharks',
+            preCraft: 'wood',
+        },
+        wood: {
+            race: 'griffins',
+            preCraft: 'plate',
+        },
+        ivory: {
+            race: 'nagas',
+            preCraft: 'slab',
+        },
+        slab: {
+            race: 'zebras',
+            preCraft: 'plate'
+        },
+    };
+
+    let preCraft = tradeKey[toSell].preCraft,
+        raceName = tradeKey[toSell].race,
+        races = gamePage.diplomacy.races,
+        race = races.filter(race => race.name === raceName)[0];
+
+    craft(preCraft);
+    craft(preCraft);
+    setTimeout(gamePage.diplomacy.tradeMultiple.bind(gamePage.diplomacy), 250, race, 1);
+  }
+
   let $resCaps = $('#resContainer .resourceRow'),
       capped = [],
       $craftables = $('#craftContainer .resourceRow'),
@@ -229,6 +263,9 @@ function craftAll() {
         $('#fastPraiseContainer a').click();
         console.log('%cPraised the sun ' + new Date(Date.now()).toLocaleTimeString(), style.event);
       
+      } else if (name === 'gold') {
+        trade('ivory');
+
       } else { capped.push(name); }
     }
   });
@@ -238,8 +275,8 @@ function craftAll() {
     .filter(craftable => craftable && craftable !== 'TBD');
 
   capped.forEach(resource => {
-    craft(resource);
-//     if (!craft(resource) && resource === 'compendium') { craft('blueprint'); }
+//     craft(resource);
+    if (!craft(resource) && resource === 'compendium') { craft('blueprint'); }
   });
 
   for (let craftable in craftRecipes) {
@@ -254,8 +291,8 @@ function auto(Fn, ms) {
 
   const defaults = {
     gatherCatnip: 20,
-    buildAll: 5000,
-    craftAll: 1000
+    buildAll: 10000,
+    craftAll: 500
   };
   ms = ms || defaults[Fn.name];
 
