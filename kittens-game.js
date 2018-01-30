@@ -71,19 +71,22 @@ function buildAll() {
     'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
     'Oil Well', //steel, gear, scaffold
+    'Accelerator', //titanium, concrete, uranium
 //     'Steamworks', //steel, gear, blueprint
-    // 'Magneto', //alloy, gear, blueprint
+//     'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
-    // 'Calciner', //steel, titanium, blueprint, oil
-    // "Factory", //titanium, plate, concrete
+//     'Calciner', //steel, titanium, blueprint, oil
+    "Factory", //titanium, plate, concrete
+//     "Reactor", //titanium, plate, concrete, blueprint
 //     'Amphitheatre', //wood, minerals, parchment
+//     'Broadcast Tower', //iron, titanium
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
     'Tradepost', //wood, minerals, gold
     'Mint', //minerals, plate, gold
     'Unic. Pasture', //unicorns
-    'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
+//     'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
 
   let $clickableBldgs = $('.bldGroupContainer .btn').not('.disabled'),
@@ -127,7 +130,8 @@ function craftAll() {
     'iron': 'plate',
     'titanium': 'alloy',
     // 'gold': 'TBD',
-    // 'oil': 'TBD',
+    'oil': 'kerosene',
+    // 'uranium': 'TBD',
     // 'catpower': 'TBD', //auto-hunts special case
     'science': 'compendium', //risky
     'culture': 'manuscript', //risky
@@ -135,7 +139,7 @@ function craftAll() {
     // 'kittens': 'TBD',
   };
 
-  const ratioModifier = 10; //probably adjust to fit workshop bonus
+  const ratioModifier = 6.00; //probably adjust to fit workshop bonus
 
   //adjust to activate/deactive resources to consider for autoCrafting
   //also can adjust which materials are considered
@@ -146,24 +150,28 @@ function craftAll() {
     // slab: { minerals: 250 },
     // plate: { iron: 125 },
     // steel: { iron: 100, coal: 100 },
-//     concrete: { slab: 2500, steel: 25 },
+    concrete: { slab: 2500, steel: 25 },
 //     gear: { steel: 15 },
+    gear: { steel: 120 }, //false
     // alloy: { steel: 75, titanium: 10 },
-    scaffold: { beam: 50 },
+//     scaffold: { beam: 50 },
+    scaffold: { beam: 1 }, //false, but faster buildings
 //     ship: { scaffold: 100, plate: 150,
 //             // starchart: 25
 //           },
+//     kerosene: { oil: 7500 },
     // parchment: { furs: 175 },
 //     manuscript: { parchment: 125,
 //                   // culture: 400
 //                 },
-    compendium: { manuscript: 50,
-                  // science: 10000
-                },
-//     blueprint: { compendium: 25,
-//                  // science: 25000
-//                },
-//     megalith: { slab: 50, beam: 25, plate: 5 }
+//     compendium: { manuscript: 50,
+//                   // science: 10000
+//                 },
+    blueprint: { compendium: 25,
+                 // science: 25000
+               },
+//     megalith: { slab: 50, beam: 25, plate: 5 },
+//     megalith: { slab: 150, beam: 75, plate: 15 },  //false
   };
 
 
@@ -219,6 +227,14 @@ function craftAll() {
             race: 'zebras',
             preCraft: 'plate'
         },
+        scaffold: {
+            race: 'spiders',
+            preCraft: 'steel'
+        },
+        titanium: {
+            race: 'dragons',
+            preCraft: 'TBD' //they give uranium
+        },
     };
 
     let preCraft = tradeKey[toSell].preCraft,
@@ -226,7 +242,7 @@ function craftAll() {
         races = gamePage.diplomacy.races,
         race = races.filter(race => race.name === raceName)[0];
 
-    craft(preCraft);
+//     craft(preCraft);
     craft(preCraft);
     setTimeout(gamePage.diplomacy.tradeMultiple.bind(gamePage.diplomacy), 250, race, 1);
   }
@@ -253,7 +269,7 @@ function craftAll() {
     max = convertQuant(max.substring(1, max.length));
     name = name.substr(0, name.length - 1);
     
-    if (max && max !== 0 && max !== '' && current >= max) {
+    if (max && current >= (max * .99)) {
       if (name === 'catpower') {
         $('#fastHuntContainer a')[0].click();
         console.log('%cHunted ' + new Date(Date.now()).toLocaleTimeString(), style.event);
@@ -265,6 +281,8 @@ function craftAll() {
       
       } else if (name === 'gold') {
         trade('ivory');
+//         trade('slab');
+//         trade('scaffold');
 
       } else { capped.push(name); }
     }
