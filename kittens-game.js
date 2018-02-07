@@ -55,11 +55,13 @@ function buildAll() {
   //adjust to determine which buildings are checked for buildAll
   const buildPriorities = [
     'Catnip field', //catnip
-    'Pasture', //catnip, wood
-    'Aqueduct', //minerals
+//     'Pasture', //catnip, wood
+    'Solar Farm', //titanium
+//     'Aqueduct', //minerals
+    'Hydro Plant', //concrete, titanium
     'Hut', //wood
     'Log House', //wood, minerals
-//     'Mansion', //slab, steel, titanium
+    'Mansion', //slab, steel, titanium
     'Library', //wood
     'Academy', //wood, minerals, science
     'Observatory', //scaffold, slab, iron, science
@@ -67,18 +69,18 @@ function buildAll() {
     'Barn', //wood
     'Warehouse', //beam, slab
     'Harbour', //scaffold, slab, plate
-    'Mine', //minerals, plate, gold
+    'Mine', //wood
     'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
     'Oil Well', //steel, gear, scaffold
     'Accelerator', //titanium, concrete, uranium
-//     'Steamworks', //steel, gear, blueprint
-//     'Magneto', //alloy, gear, blueprint
+    'Steamworks', //steel, gear, blueprint
+    'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
-//     'Calciner', //steel, titanium, blueprint, oil
+    'Calciner', //steel, titanium, blueprint, oil
     "Factory", //titanium, plate, concrete
-//     "Reactor", //titanium, plate, concrete, blueprint
-//     'Amphitheatre', //wood, minerals, parchment
+    "Reactor", //titanium, plate, concrete, blueprint
+    'Amphitheatre', //wood, minerals, parchment
 //     'Broadcast Tower', //iron, titanium
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
@@ -86,7 +88,7 @@ function buildAll() {
     'Tradepost', //wood, minerals, gold
     'Mint', //minerals, plate, gold
     'Unic. Pasture', //unicorns
-//     'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
+    'Ziggurat', //megalith(slab, beam, plate), scaffold, blueprint
   ];
 
   let $clickableBldgs = $('.bldGroupContainer .btn').not('.disabled'),
@@ -106,6 +108,10 @@ function buildAll() {
     if ($rdyBldg) {
       $rdyBldg.click();
       console.log('%cBuilt: ' + building + ' ' + new Date(Date.now()).toLocaleTimeString(), style.build);
+      if (building === 'Mint') {
+        let $mintSubtract = $('.bldGroupContainer .btn > :contains("Mint") > :contains("-") a')[1];
+        setTimeout($mintSubtract.click.bind($mintSubtract), 333);
+      }
       break;
     }
   };
@@ -128,18 +134,19 @@ function craftAll() {
     'minerals': 'slab',
     'coal': 'steel',
     'iron': 'plate',
-    'titanium': 'alloy',
+//     'titanium': 'alloy',
     // 'gold': 'TBD',
     'oil': 'kerosene',
-    // 'uranium': 'TBD',
+    'uranium': 'thorium',
+    'unobtainium': 'eludium',
     // 'catpower': 'TBD', //auto-hunts special case
     'science': 'compendium', //risky
     'culture': 'manuscript', //risky
-    // 'faith': 'TBD', //auto-praise special case
+//     'faith': 'TBD', //auto-praise special case
     // 'kittens': 'TBD',
   };
 
-  const ratioModifier = 6.00; //probably adjust to fit workshop bonus
+  const ratioModifier = 1; //probably adjust to fit workshop bonus
 
   //adjust to activate/deactive resources to consider for autoCrafting
   //also can adjust which materials are considered
@@ -150,28 +157,36 @@ function craftAll() {
     // slab: { minerals: 250 },
     // plate: { iron: 125 },
     // steel: { iron: 100, coal: 100 },
-    concrete: { slab: 2500, steel: 25 },
+//     concrete: { slab: 2500, steel: 25 },
+    concrete: { slab: 1500, steel: 15 }, //false
 //     gear: { steel: 15 },
-    gear: { steel: 120 }, //false
-    // alloy: { steel: 75, titanium: 10 },
-//     scaffold: { beam: 50 },
-    scaffold: { beam: 1 }, //false, but faster buildings
+    gear: { steel: 3 }, //false
+//     alloy: { steel: 75, titanium: 10 },
+    alloy: { steel: 3, /* titanium: 10 */ }, //false
+// //     scaffold: { beam: 50 },
+    scaffold: { beam: 5 }, //false, but faster buildings
 //     ship: { scaffold: 100, plate: 150,
 //             // starchart: 25
 //           },
+//     tanker: {
+//         ship: 200,
+//         alloy: 1250,
+//         blueprint: 5
+//     },
 //     kerosene: { oil: 7500 },
     // parchment: { furs: 175 },
-//     manuscript: { parchment: 125,
+//     manuscript: { parchment: 25,
 //                   // culture: 400
 //                 },
 //     compendium: { manuscript: 50,
 //                   // science: 10000
 //                 },
-    blueprint: { compendium: 25,
+//     blueprint: { compendium: 25,
+    blueprint: { compendium: 2,
                  // science: 25000
                },
 //     megalith: { slab: 50, beam: 25, plate: 5 },
-//     megalith: { slab: 150, beam: 75, plate: 15 },  //false
+    megalith: { slab: 30, beam: 15, plate: 5 },  //false
   };
 
 
@@ -205,7 +220,7 @@ function craftAll() {
   }
 
 
-  function trade(toSell) {
+  function trade(toSell, numTrades) {
     const tradeKey = {
         minerals: {
             race: 'lizards',
@@ -233,7 +248,7 @@ function craftAll() {
         },
         titanium: {
             race: 'dragons',
-            preCraft: 'TBD' //they give uranium
+            preCraft: 'thorium' //they give uranium
         },
     };
 
@@ -242,9 +257,8 @@ function craftAll() {
         races = gamePage.diplomacy.races,
         race = races.filter(race => race.name === raceName)[0];
 
-//     craft(preCraft);
     craft(preCraft);
-    setTimeout(gamePage.diplomacy.tradeMultiple.bind(gamePage.diplomacy), 250, race, 1);
+    setTimeout(gamePage.diplomacy.tradeMultiple.bind(gamePage.diplomacy), 250, race, numTrades);
   }
 
   let $resCaps = $('#resContainer .resourceRow'),
@@ -272,7 +286,7 @@ function craftAll() {
     if (max && current >= (max * .99)) {
       if (name === 'catpower') {
         $('#fastHuntContainer a')[0].click();
-        console.log('%cHunted ' + new Date(Date.now()).toLocaleTimeString(), style.event);
+//         console.log('%cHunted ' + new Date(Date.now()).toLocaleTimeString(), style.event);
         setTimeout(craft, 1000, 'parchment', 4);
       
       } else if (name === 'faith') {
@@ -280,9 +294,24 @@ function craftAll() {
         console.log('%cPraised the sun ' + new Date(Date.now()).toLocaleTimeString(), style.event);
       
       } else if (name === 'gold') {
-        trade('ivory');
-//         trade('slab');
-//         trade('scaffold');
+        let seasonTradeKey = {
+            Spring: 'wood',  //best ivory
+            Summer: 'minerals', //best minerals
+            Autumn: 'wood', //best scaffold, wood
+            Winter: 'slab' //best slab
+        };
+
+        let curDate = $('#calendarDiv')[0].innerText,
+            start,
+            end,
+            curSeason;
+
+        start = curDate.indexOf('- ') + 2;
+        end = curDate.indexOf(' (');
+        end = end > -1 ? end : curDate.indexOf(', ');
+        curSeason = curDate.substring(start, end);
+
+        trade(seasonTradeKey[curSeason], 20);
 
       } else { capped.push(name); }
     }
