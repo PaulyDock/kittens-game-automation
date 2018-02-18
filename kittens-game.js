@@ -67,10 +67,10 @@ function buildAll() {
     'Observatory', //scaffold, slab, iron, science
     'Bio Lab', //slab, alloy, science
     'Barn', //wood
-    'Warehouse', //beam, slab
-    'Harbour', //scaffold, slab, plate
+//     'Warehouse', //beam, slab
+//     'Harbour', //scaffold, slab, plate
     'Mine', //wood
-    'Quarry', //scaffold, steel, slab
+//     'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
     'Oil Well', //steel, gear, scaffold
     'Accelerator', //titanium, concrete, uranium
@@ -80,8 +80,8 @@ function buildAll() {
     'Calciner', //steel, titanium, blueprint, oil
     "Factory", //titanium, plate, concrete
     "Reactor", //titanium, plate, concrete, blueprint
-    'Amphitheatre', //wood, minerals, parchment
-//     'Broadcast Tower', //iron, titanium
+//     'Amphitheatre', //wood, minerals, parchment
+    'Broadcast Tower', //iron, titanium
     'Chapel', //minerals, culture, parchment
     'Temple', //slab, plate, gold, manuscript
     'Workshop', //wood, minerals
@@ -140,8 +140,8 @@ function craftAll() {
     'uranium': 'thorium',
     'unobtainium': 'eludium',
     // 'catpower': 'TBD', //auto-hunts special case
-    'science': 'compendium', //risky
-    'culture': 'manuscript', //risky
+//     'science': 'compendium', //risky
+//     'culture': 'manuscript', //risky
 //     'faith': 'TBD', //auto-praise special case
     // 'kittens': 'TBD',
   };
@@ -163,9 +163,10 @@ function craftAll() {
     gear: { steel: 3 }, //false
 //     alloy: { steel: 75, titanium: 10 },
     alloy: { steel: 3, /* titanium: 10 */ }, //false
-// //     scaffold: { beam: 50 },
-    scaffold: { beam: 5 }, //false, but faster buildings
+//     scaffold: { beam: 50 },
+    scaffold: { beam: 1 }, //false, but faster buildings
 //     ship: { scaffold: 100, plate: 150,
+//     ship: { scaffold: 1, plate: 1, //false
 //             // starchart: 25
 //           },
 //     tanker: {
@@ -174,19 +175,21 @@ function craftAll() {
 //         blueprint: 5
 //     },
 //     kerosene: { oil: 7500 },
-    // parchment: { furs: 175 },
+//     parchment: { furs: 175 },
 //     manuscript: { parchment: 25,
-//                   // culture: 400
-//                 },
+    manuscript: { parchment: 1,
+                  // culture: 400
+                },
 //     compendium: { manuscript: 50,
-//                   // science: 10000
-//                 },
+    compendium: { manuscript: 1, //false
+                  // science: 10000
+                },
 //     blueprint: { compendium: 25,
-    blueprint: { compendium: 2,
+    blueprint: { compendium: 1, //false
                  // science: 25000
                },
 //     megalith: { slab: 50, beam: 25, plate: 5 },
-    megalith: { slab: 30, beam: 15, plate: 5 },  //false
+    megalith: { slab: 1, beam: 1, plate: .2 },  //false
   };
 
 
@@ -296,7 +299,7 @@ function craftAll() {
       } else if (name === 'gold') {
         let seasonTradeKey = {
             Spring: 'wood',  //best ivory
-            Summer: 'minerals', //best minerals
+            Summer: 'slab', //best minerals
             Autumn: 'wood', //best scaffold, wood
             Winter: 'slab' //best slab
         };
@@ -311,7 +314,7 @@ function craftAll() {
         end = end > -1 ? end : curDate.indexOf(', ');
         curSeason = curDate.substring(start, end);
 
-        trade(seasonTradeKey[curSeason], 20);
+        trade(seasonTradeKey[curSeason], 400);
 
       } else { capped.push(name); }
     }
