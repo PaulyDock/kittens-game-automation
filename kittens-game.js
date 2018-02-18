@@ -261,6 +261,7 @@ function craftAll() {
         race = races.filter(race => race.name === raceName)[0];
 
     craft(preCraft);
+//     craft(preCraft, 2);
     setTimeout(gamePage.diplomacy.tradeMultiple.bind(gamePage.diplomacy), 250, race, numTrades);
   }
 
@@ -286,7 +287,9 @@ function craftAll() {
     max = convertQuant(max.substring(1, max.length));
     name = name.substr(0, name.length - 1);
     
-    if (max && current >= (max * .99)) {
+//     if (max && current >= (max * .99)) {
+//     if (max && current >= (max * .95)) {
+    if (max && current >= (max * .90)) {
       if (name === 'catpower') {
         $('#fastHuntContainer a')[0].click();
 //         console.log('%cHunted ' + new Date(Date.now()).toLocaleTimeString(), style.event);
@@ -326,11 +329,32 @@ function craftAll() {
 
   capped.forEach(resource => {
 //     craft(resource);
-    if (!craft(resource) && resource === 'compendium') { craft('blueprint'); }
+    // if (resource === 'compendium' || resource === 'manuscript') {
+    //   craft(resource, 3);
+    // } else {
+//       if (!craft(resource, 2)) { craft(resource, 1); }
+      for (let i = 3; i >= 1; i--) { if (craft(resource, i)) { break; } }
+    // }
+//     if (resource === 'compendium') { craft('blueprint'); }
+//     if (resource === 'compendium') { craft('blueprint', 4); }
   });
 
   for (let craftable in craftRecipes) {
-    if (testRatios(craftable)) { craft(craftable); }
+    if (testRatios(craftable)) {
+      // if (craftable === 'blueprint') {
+      //   if (!craft('blueprint', 2)) { craft('blueprint'); }
+      // }
+      if (craftable === 'manuscript') {
+        if (!craft('manuscript', 3)) {
+          if (!craft('manuscript', 2)) {
+            craft('manuscript');
+          }
+        }
+      } else {
+//       craft(craftable);
+        if (!craft(craftable, 2)) { craft(craftable); }
+      }
+    }
   }
 
 };
