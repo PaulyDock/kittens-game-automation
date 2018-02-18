@@ -377,8 +377,8 @@ function auto(Fn, ms) {
 
 function autoAll(ms) {
 //   auto(gatherCatnip, ms);
-  auto(buildAll);
-  auto(craftAll);
+  auto(buildAll, ms);
+  auto(craftAll, ms);
 }
 
 
@@ -399,12 +399,12 @@ function stopAll() {
 }
 
 
-function aa() { autoAll(); }
+function aa(interval) { autoAll(interval); }
 function sa() { stopAll(); }
-function ac() { auto(craftAll); }
+function ac(interval) { auto(craftAll, interval); }
 function sc() { stopAuto(craftAll); }
-function ab() { auto(buildAll); }
+function ab(interval) { auto(buildAll, interval); }
 function sb() { stopAuto(buildAll); }
-function cat() { auto(gatherCatnip); }
+function cat(interval) { auto(gatherCatnip, interval); }
 function scat() { stopAuto(gatherCatnip); }
 
