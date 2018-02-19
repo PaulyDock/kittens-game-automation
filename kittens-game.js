@@ -72,10 +72,10 @@ function buildAll() {
     'Mine', //wood
 //     'Quarry', //scaffold, steel, slab
     'Lumber Mill', //wood, minerals, iron
-    'Oil Well', //steel, gear, scaffold
+//     'Oil Well', //steel, gear, scaffold
     'Accelerator', //titanium, concrete, uranium
-    'Steamworks', //steel, gear, blueprint
-    'Magneto', //alloy, gear, blueprint
+//     'Steamworks', //steel, gear, blueprint
+//     'Magneto', //alloy, gear, blueprint
     'Smelter', //minerals
     'Calciner', //steel, titanium, blueprint, oil
     "Factory", //titanium, plate, concrete
@@ -158,9 +158,9 @@ function craftAll() {
     // plate: { iron: 125 },
     // steel: { iron: 100, coal: 100 },
 //     concrete: { slab: 2500, steel: 25 },
-    concrete: { slab: 1500, steel: 15 }, //false
+//     concrete: { slab: 1500, steel: 15 }, //false
 //     gear: { steel: 15 },
-    gear: { steel: 3 }, //false
+//     gear: { steel: 3 }, //false
 //     alloy: { steel: 75, titanium: 10 },
     alloy: { steel: 3, /* titanium: 10 */ }, //false
 //     scaffold: { beam: 50 },
@@ -317,7 +317,7 @@ function craftAll() {
         end = end > -1 ? end : curDate.indexOf(', ');
         curSeason = curDate.substring(start, end);
 
-        trade(seasonTradeKey[curSeason], 400);
+        trade(seasonTradeKey[curSeason], 10);
 
       } else { capped.push(name); }
     }
