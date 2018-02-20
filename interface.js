@@ -1,3 +1,7 @@
+
+$('#autoContainer').remove();
+$('#autoStyle').remove();
+
 cappedResourceMap = {
   'catnip': 'wood',
   'wood': 'beam',
@@ -86,6 +90,7 @@ craftResourceMap = {
   }
 };
 
+inputMap = {};
 
 
 function makeAutoCapRow(resource) {
@@ -96,7 +101,7 @@ function makeAutoCapRow(resource) {
 }
 
 function makeAutoCraftRow(resource) {
-  let $autoCraftRow = $(document.createElement('tr')).addClass('autoCraftRow').prop('style', 'padding: 2px 0px;'),
+  let $autoCraftRow = $(document.createElement('tr')).addClass('autoCraftRow'),
       $craftResName = $('<td style="width: 85px;"></td>').text(resource), //name
       $autoCraftCheckbox = $('<td style="width: 17px;"><input type="checkbox" style="display: block;"></td>'),  //name? id?
       $autoComponentRows = $('<td><table></table></td>');
@@ -153,9 +158,9 @@ function addAutoTable() {
 
 
 function addAutoStyle() {
-  let autoStyle = $(document.createElement('style')).text(`
+  let autoStyle = $(document.createElement('style')).attr('id', 'autoStyle').text(`
     .autoCraftRow > td {
-      padding: 10px 0px
+      padding: 3px 0px
     }
   `);
 
@@ -164,3 +169,4 @@ function addAutoStyle() {
 
 addAutoTable();
 addAutoStyle();
+
