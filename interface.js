@@ -1,5 +1,3 @@
-$autoContainer = $('<div id="autoContainer"></div>');
-
 cappedResourceMap = {
   'catnip': 'wood',
   'wood': 'beam',
@@ -91,15 +89,15 @@ craftResourceMap = {
 
 
 function makeAutoCapRow(resource) {
-  let $autoCapRow = $('<tr class="autoCapRow"></tr>'),
-      $capResName = $('<td style="width: 85px; color: white;"></td>').text(resource), //name
+  let $autoCapRow = $(document.createElement('tr')).addClass('autoCapRow'),
+      $capResName = $('<td style="width: 85px;"></td>').text(resource), //name
       $autoCapCheckbox = $('<td style="width: 17px"><input type="checkbox" style="display: block;"></td>');  //name? id?
   return $autoCapRow.append($capResName).append($autoCapCheckbox);
 }
 
 function makeAutoCraftRow(resource) {
-  let $autoCraftRow = $('<tr class="autoCraftRow"></tr>').prop('style', 'padding: 2px 0px;'),
-      $craftResName = $('<td style="width: 85px; color: white;"></td>').text(resource), //name
+  let $autoCraftRow = $(document.createElement('tr')).addClass('autoCraftRow').prop('style', 'padding: 2px 0px;'),
+      $craftResName = $('<td style="width: 85px;"></td>').text(resource), //name
       $autoCraftCheckbox = $('<td style="width: 17px;"><input type="checkbox" style="display: block;"></td>'),  //name? id?
       $autoComponentRows = $('<td><table></table></td>');
 
@@ -111,7 +109,7 @@ function makeAutoCraftRow(resource) {
 }
 
 function makeComponentRow(resultResource, component) {
-  let $componentRow = $(document.createElement('tr')),
+  let $componentRow = $(document.createElement('tr')).addClass('componentRow'),
       $componentName = $(document.createElement('td')).prop('style', 'width: 85px;').text(component),
       // $componentCheckbox = $(document.createElement('input')).prop('type', 'checkbox').prop('style', 'display: block;');
       $componentRatio = $(document.createElement('input'))
@@ -145,7 +143,24 @@ function makeAutoCraftTable(resMap) {
 
 
 // add to DOM
-$autoContainer
-  .append(makeAutoCapTable(cappedResourceMap))
-  .append(makeAutoCraftTable(craftResourceMap));
-$('#leftColumn').append($autoContainer);
+function addAutoTable() {
+  let $autoContainer = $('<div id="autoContainer"></div>');
+  $autoContainer
+    .append(makeAutoCapTable(cappedResourceMap))
+    .append(makeAutoCraftTable(craftResourceMap));
+  $('#leftColumn').append($autoContainer);  
+}
+
+
+function addAutoStyle() {
+  let autoStyle = $(document.createElement('style')).text(`
+    .autoCraftRow > td {
+      padding: 10px 0px
+    }
+  `);
+
+  $('head').append(autoStyle);
+}
+
+addAutoTable();
+addAutoStyle();
